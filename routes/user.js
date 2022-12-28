@@ -3,7 +3,7 @@ const {
   verifyToken,
   verifyTokenAndAuthorization,
   verifyTokenAndAdmin,
-  basicAuthentication,
+
 } = require("./verifyToken");
 const CryptoJS = require("crypto-js");
 
