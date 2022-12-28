@@ -3,6 +3,7 @@ const {
   verifyToken,
   verifyTokenAndAuthorization,
   verifyTokenAndAdmin,
+  basicAuthentication,
 } = require("./verifyToken");
 const CryptoJS = require("crypto-js");
 
@@ -53,7 +54,7 @@ router.get("/find/", verifyTokenAndAuthorization, async (req, res) => {
 });
 
 //GET ALL USER
-router.get("/", verifyTokenAndAdmin, async (req, res) => {
+router.get("/",  async (req, res) => {
   const query = req.query.new;
   try {
     const users = query

@@ -12,6 +12,9 @@ const CartSchema = new mongoose.Schema(
           type: Number,
           default: 1,
         },
+        amount: {
+          type: mongoose.Types.Decimal128,
+        },
       },
     ],
   },

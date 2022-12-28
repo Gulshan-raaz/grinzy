@@ -2,9 +2,11 @@ const router = require("express").Router();
 const User = require("../models/User");
 const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
-
+const {userDetails} = require("../services/userDetail")
 //REGISTER
 router.post("/register", async (req, res) => {
+  
+
   const newUser = new User({
     business_Name: req.body.business_Name,
     business_Email: req.body.business_Email,
@@ -15,6 +17,7 @@ router.post("/register", async (req, res) => {
     business_image: req.body.business_image,
     business_aadhar: req.body.business_aadhar,
     emergency_contact: req.body.emergency_contact,
+    contact_person: req.body.contact_person,
     business_Password: CryptoJS.AES.encrypt(
       req.body.business_Password,
       process.env.PASS_SEC
@@ -80,27 +83,17 @@ router.post('/login', async (req, res) => {
 router.get('/profile', async (req, res) => {
   try{
      
-      
+    // userDetails(req.headers)
 
     if (req.headers) {
-      var authorization = req.headers.token,decoded;
-      try {
-          decoded = jwt.verify(authorization, process.env.JWT_SEC);
-      } catch (e) {
-          return res.status(401).send({"status":false,"message":"Unauthorized User","data":{}});
-      }
-      var userId = decoded.id;
-      // Fetch the user by id 
-      const user = await User.findById(userId);
-      const { business_Password, ...others } = user._doc;
-      res.status(200).json({"status":true,"message":"Profile Loaded","data":others});
-  }
-
-      
-
+      const userData=userDetails(req.headers);
+      userData.then((data)=>{
+        res.status(200).json({"status":true,"data":data});
+      });
+        
      
-
-  }catch(err){
+  }
+}catch(err){
       res.status(500).json(err);
   }
 

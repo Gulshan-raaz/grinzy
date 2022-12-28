@@ -12,9 +12,12 @@ const OrderSchema = new mongoose.Schema(
           type: Number,
           default: 1,
         },
+        amount: {
+          type: mongoose.Types.Decimal128,
+        },
       },
     ],
-    amount: { type: Number, required: true },
+    amount: { type: mongoose.Types.Decimal128, required: true },
     address: { type: Object, required: true },
     status: { type: String, default: "pending" },
   },
