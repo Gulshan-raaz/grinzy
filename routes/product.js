@@ -10,7 +10,12 @@ const router = require("express").Router();
 //CREATE
 
 router.post("/", verifyTokenAndAdmin, async (req, res) => {
-  const newProduct = new Product(req.body);
+  let newProduct = new Product(req.body);
+  let price=[]
+   price["percent"] =((newProduct.mrp-newProduct.price)/newProduct.mrp)*100
+  console.log(newProduct);
+  newProduct = Object.assign(newProduct,price);
+  // console.log(newProduct);
 
   try {
     const savedProduct = await newProduct.save();

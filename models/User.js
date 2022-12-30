@@ -8,6 +8,7 @@ const UserSchema = new mongoose.Schema(
     business_Address: { type: Object, required: true},
     business_Password: { type: String, required: true },
     business_Credit: { type:Number, required: true,default:0},
+    business_category: { type: String,required: true},
     business_image: { type: String},
     business_aadhar: { type: String},
     emergency_contact: { type: String},
