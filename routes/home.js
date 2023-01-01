@@ -11,10 +11,13 @@ router.get("/", async (req, res) => {
 
     products = await Product.find().limit(10);
     const hproduct = {"type": "vertical",
+    "title": "Daily Usage",
     data: products}
     const vproduct = {"type": "horizontal",
+    "title":"Most popular",
     data: products}
     const banner = {"type": "banner",
+    "title":"Sponser",
     data:{
       "image":"",
     }}
