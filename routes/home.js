@@ -11,6 +11,14 @@ router.get("/", async (req, res) => {
     
       products = await Product.find().limit(10);
     const data={
+      status:{
+        success:true,
+        message:"product was successfully loaded"
+      },
+      "bannertop": {
+        "image1": "https://images.unsplash.com/photo-15187955",
+
+      },
       "vertical": products,
       "horizontal": products
 
