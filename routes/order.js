@@ -4,6 +4,7 @@ const {
   verifyTokenAndAuthorization,
   verifyTokenAndAdmin,
 } = require("./verifyToken");
+const {userDetails} = require("../services/userDetail")
 
 const router = require("express").Router();
 
@@ -48,9 +49,11 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
 });
 
 //GET USER ORDERS
-router.get("/find/:id", verifyTokenAndAuthorization, async (req, res) => {
+router.get("/find/", verifyToken, async (req, res) => {
+
   try {
-    const orders = await Order.find({ userId: req.params.id });
+    const userData=userDetails(req.headers);
+    const orders = await Order.find({ userId: userData.id });
     res.status(200).json(orders);
   } catch (err) {
     res.status(500).json(err);
