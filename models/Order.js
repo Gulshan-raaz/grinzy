@@ -24,6 +24,7 @@ const OrderSchema = new mongoose.Schema(
     address: { type: Object, required: true },
     status: { type: String, default: "pending" },
     orderid: { type: String },
+    unit: { type: String },
   },
   { timestamps: true }
 );
