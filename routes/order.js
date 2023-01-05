@@ -11,7 +11,21 @@ const router = require("express").Router();
 //CREATE
 
 router.post("/", verifyToken, async (req, res) => {
-  const newOrder = new Order(req.body);
+  let newOrder = new Order(req.body);
+    const userData = await userDetails(req.headers);
+  
+  console.log(userData);
+  const orders = await Order.find();
+  // console.log();
+  let address=[]
+  address["address"] =userData.business_Address
+  address["userId"] =userData._id
+  address["orderid"] =orders.length+1
+ console.log(address);
+
+ newOrder = Object.assign(newOrder,address);
+
+
 
   try {
     const savedOrder = await newOrder.save();
@@ -52,8 +66,24 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
 router.get("/find/", verifyToken, async (req, res) => {
 
   try {
-    const userData=userDetails(req.headers);
-    const orders = await Order.find({ userId: userData.id });
+    const userData=await userDetails(req.headers);
+    const orders = await Order.find({ userId: userData._id });
+    
+    res.status(200).json(orders);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.get("/find/:id", verifyToken, async (req, res) => {
+
+  try {
+    //const userData=await userDetails(req.headers);
+    console.log(req.params.id);
+    const orders = await Order.findById(req.params.id);
+    console.log(orders);
+        
+   // const orders = await Order.find({ userId: userData._id });
     res.status(200).json(orders);
   } catch (err) {
     res.status(500).json(err);

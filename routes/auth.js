@@ -2,10 +2,10 @@ const router = require("express").Router();
 const User = require("../models/User");
 const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
-const {userDetails} = require("../services/userDetail")
+const { userDetails } = require("../services/userDetail")
 //REGISTER
 router.post("/register", async (req, res) => {
-  
+
 
   const newUser = new User({
     business_Name: req.body.business_Name,
@@ -26,7 +26,7 @@ router.post("/register", async (req, res) => {
 
   try {
     const savedUser = await newUser.save();
-    res.status(201).json({"status":true,"message":"User Created ",data:savedUser});
+    res.status(201).json({ "status": true, "message": "User Created ", data: savedUser });
   } catch (err) {
     res.status(500).json(err);
   }
@@ -35,43 +35,48 @@ router.post("/register", async (req, res) => {
 //LOGIN
 
 router.post('/login', async (req, res) => {
-    try{
-        const user = await User.findOne(
-            {
-              business_Number: req.body.business_Number
-            }
-        );
+  try {
+    const user = await User.findOne(
+      {
+        business_Number: req.body.business_Number
+      }
+    );
+if(!user){
+  return res.status(401).send({ "status": false, "message": "User Not Exist", "data": {}})
+}
+    
 
-        !user && res.status(401).json({"status":false,"message":"User Not Exist","data":{}});
-
-        const hashedPassword = CryptoJS.AES.decrypt(
-            user.business_Password,
-            process.env.PASS_SEC
-        );
+    const hashedPassword = CryptoJS.AES.decrypt(
+      user.business_Password,
+      process.env.PASS_SEC
+    );
 
 
-        const originalPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
+    const originalPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
 
-        const inputPassword = req.body.business_Password;
-        
-        originalPassword != inputPassword && 
-            res.status(401).json({"status":false,"message":"Password Incorrect","data":{}});
+    const inputPassword = req.body.business_Password;
+if(originalPassword != inputPassword){
+  return res.status(401).send({ "status": false, "message": "Password Incorrect", "data": {} });
+}
+    
+     
 
-        const accessToken = jwt.sign(
-        {
-            id: user._id,
-            isAdmin: user.isAdmin,
-        },
-        process.env.JWT_SEC,
-            {expiresIn:"3d"}
-        );
-  
-        const { business_Password, ...others } = user._doc;  
-        res.status(200).json({"status":true,"message":"Login Success","data":{...others, accessToken}});
+    const accessToken = jwt.sign(
+      {
+        id: user._id,
+        isAdmin: user.isAdmin,
+      },
+      process.env.JWT_SEC,
+      { expiresIn: "3d" }
+    );
 
-    }catch(err){
-        res.status(500).json(err);
-    }
+    const { business_Password, ...others } = user._doc;
+
+    return res.status(200).send({ "status": true, "message": "Login Success", "data": { ...others, accessToken } });
+
+  } catch (err) {
+    res.status(500).send(err);
+  }
 
 });
 
@@ -81,20 +86,20 @@ router.post('/login', async (req, res) => {
 //Profile
 
 router.get('/profile', async (req, res) => {
-  try{
-     
+  try {
+
     // userDetails(req.headers)
 
     if (req.headers) {
-      const userData=userDetails(req.headers);
-      userData.then((data)=>{
-        res.status(200).json({"status":true,"data":data});
+      const userData = userDetails(req.headers);
+      userData.then((data) => {
+        res.status(200).json({ "status": true, "data": data });
       });
-        
-     
-  }
-}catch(err){
-      res.status(500).json(err);
+
+
+    }
+  } catch (err) {
+    res.status(500).json(err);
   }
 
 });
