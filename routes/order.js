@@ -1,4 +1,5 @@
 const Order = require("../models/Order");
+const Product =require("../models/Product");
 const {
   verifyToken,
   verifyTokenAndAuthorization,
@@ -70,6 +71,34 @@ router.get("/find/", verifyToken, async (req, res) => {
   try {
     const userData=await userDetails(req.headers);
     const orders = await Order.find({ userId: userData._id });
+    // let productsa=[]
+    // const productsdata = orders.map(product => {
+    //  product.products
+    //    .map(async product => {  
+    //    // console.log(product.productId)
+    //     const singleproduct = await Product.findById("63ae08ac3bec969795d9f166").then(productl => {
+    //      // console.log(productl)
+    //       productsa.push({
+    //         productId: product.productId,
+    //         productName: productl.title,
+    //         quantity: product.quantity,
+    //         amount: product.amount,
+    //         unit: product.unit
+            
+    //     });
+   
+    //     }, ()=>{
+    //       res.status(200).json(productsa);
+    //     });
+       // console.log("kasnmz,",singleproduct);
+       
+      
+        
+  //       })
+  // })
+//   console.log(productsa);
+//   //orders = Object.assign(orders,products);
+//  // console.log(productsdata)
     const data = {
       success: true,
       message:"OK",
@@ -89,11 +118,33 @@ router.get("/find/:id", verifyToken, async (req, res) => {
     //const userData=await userDetails(req.headers);
     console.log(req.params.id);
     const orders = await Order.findById(req.params.id);
-    console.log(orders);
+   // console.log(orders);
+   let status = []
+   const statusdata = {
+    success: true,
+    created: orders.createdAt,
+    updated: Date.parse(orders.createdAt)==Date.parse(orders.updatedAt)?"":orders.updatedAt,
+  }
+   status.push({
+    status: statusdata,
+           success: true,
+           _id:orders._id,
+           product:orders.products,
+           amount:orders.amount,
+           address:orders.address,
+           orderid:orders.orderid,
+                      otp:orders.otp,
+                      userId:orders.userId,
+            
+        });
+  
+   
+    
+   console.log(status);
     const data = {
       success: true,
       message:"OK",
-      data:  orders,
+      data:  status,
       
 
     }

@@ -11,6 +11,9 @@ const OrderSchema = new mongoose.Schema(
         productName: {
           type: String,
         },
+        productImage: {
+          type: String,
+        },
         quantity: {
           type: Number,
           default: 1,
@@ -19,7 +22,8 @@ const OrderSchema = new mongoose.Schema(
           type: Number,
         },
         unit: {
-           type: String
+           type: String,
+           required: true
            },
       },
     ],
