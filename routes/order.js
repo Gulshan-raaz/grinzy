@@ -21,6 +21,8 @@ router.post("/", verifyToken, async (req, res) => {
   address["address"] =userData.business_Address
   address["userId"] =userData._id
   address["orderid"] =orders.length+1
+  address["otp"] =Math.floor(Math.random() * 10000);
+  
  console.log(address);
 
  newOrder = Object.assign(newOrder,address);
@@ -68,8 +70,14 @@ router.get("/find/", verifyToken, async (req, res) => {
   try {
     const userData=await userDetails(req.headers);
     const orders = await Order.find({ userId: userData._id });
-    
-    res.status(200).json(orders);
+    const data = {
+      success: true,
+      message:"OK",
+      data:  orders,
+      
+
+    }
+    res.status(200).json(data);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -82,9 +90,15 @@ router.get("/find/:id", verifyToken, async (req, res) => {
     console.log(req.params.id);
     const orders = await Order.findById(req.params.id);
     console.log(orders);
-        
+    const data = {
+      success: true,
+      message:"OK",
+      data:  orders,
+      
+
+    }
    // const orders = await Order.find({ userId: userData._id });
-    res.status(200).json(orders);
+    res.status(200).json(data);
   } catch (err) {
     res.status(500).json(err);
   }
