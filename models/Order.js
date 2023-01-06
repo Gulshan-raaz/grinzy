@@ -18,6 +18,9 @@ const OrderSchema = new mongoose.Schema(
         amount: {
           type: Number,
         },
+        unit: {
+           type: String
+           },
       },
     ],
     amount: { type: Number, required: true },
@@ -25,7 +28,7 @@ const OrderSchema = new mongoose.Schema(
     status: { type: String, default: "created" },
     otp: { type: Number, required: true},
     orderid: { type: String },
-    unit: { type: String },
+    
   },
   { timestamps: true }
 );
