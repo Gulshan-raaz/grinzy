@@ -1,11 +1,11 @@
 const Order = require("../models/Order");
-const Product =require("../models/Product");
+const Product = require("../models/Product");
 const {
   verifyToken,
   verifyTokenAndAuthorization,
   verifyTokenAndAdmin,
 } = require("./verifyToken");
-const {userDetails} = require("../services/userDetail")
+const { userDetails } = require("../services/userDetail")
 
 const router = require("express").Router();
 
@@ -13,20 +13,20 @@ const router = require("express").Router();
 
 router.post("/", verifyToken, async (req, res) => {
   let newOrder = new Order(req.body);
-    const userData = await userDetails(req.headers);
-  
+  const userData = await userDetails(req.headers);
+
   console.log(userData);
   const orders = await Order.find();
   // console.log();
-  let address=[]
-  address["address"] =userData.business_Address
-  address["userId"] =userData._id
-  address["orderid"] =orders.length+1
-  address["otp"] =Math.floor(Math.random() * 10000);
-  
- console.log(address);
+  let address = []
+  address["address"] = userData.business_Address
+  address["userId"] = userData._id
+  address["orderid"] = orders.length + 1
+  address["otp"] = Math.floor(Math.random() * 10000);
 
- newOrder = Object.assign(newOrder,address);
+  console.log(address);
+
+  newOrder = Object.assign(newOrder, address);
 
 
 
@@ -40,7 +40,7 @@ router.post("/", verifyToken, async (req, res) => {
 
 //UPDATE
 router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
-  
+
   try {
     const updatedOrder = await Order.findByIdAndUpdate(
       req.params.id,
@@ -69,7 +69,7 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
 router.get("/find/", verifyToken, async (req, res) => {
 
   try {
-    const userData=await userDetails(req.headers);
+    const userData = await userDetails(req.headers);
     const orders = await Order.find({ userId: userData._id });
     // let productsa=[]
     // const productsdata = orders.map(product => {
@@ -84,26 +84,26 @@ router.get("/find/", verifyToken, async (req, res) => {
     //         quantity: product.quantity,
     //         amount: product.amount,
     //         unit: product.unit
-            
+
     //     });
-   
+
     //     }, ()=>{
     //       res.status(200).json(productsa);
     //     });
-       // console.log("kasnmz,",singleproduct);
-       
-      
-        
-  //       })
-  // })
-//   console.log(productsa);
-//   //orders = Object.assign(orders,products);
-//  // console.log(productsdata)
+    // console.log("kasnmz,",singleproduct);
+
+
+
+    //       })
+    // })
+    //   console.log(productsa);
+    //   //orders = Object.assign(orders,products);
+    //  // console.log(productsdata)
     const data = {
       success: true,
-      message:"OK",
-      data:  orders,
-      
+      message: "OK",
+      data: orders,
+
 
     }
     res.status(200).json(data);
@@ -118,47 +118,71 @@ router.get("/find/:id", verifyToken, async (req, res) => {
     //const userData=await userDetails(req.headers);
     console.log(req.params.id);
     const orders = await Order.findById(req.params.id);
-   // console.log(orders);
-   let status = []
-   
-   const statusdata = 
-    [
-      {
-        "title": "Created",
-        "time": orders.createdAt,
-        "isComplete": true
-      },
-      {
-        "title": "Delivered",
-        "time": Date.parse(orders.createdAt)==Date.parse(orders.updatedAt)?"":orders.updatedAt,
-        "isComplete": Date.parse(orders.createdAt)==Date.parse(orders.updatedAt)?"false":true
-      }
-    ]
-  
-   status.push({
-    status: statusdata,
-           success: true,
-           _id:orders._id,
-           product:orders.products,
-           amount:orders.amount,
-           address:orders.address,
-           orderid:orders.orderid,
-                      otp:orders.otp,
-                      userId:orders.userId,
-            
-        });
-  
-   
+    // console.log(orders);
+    let status = []
+    //    const dateString = '2023-01-06T11:10:59.135Z';
     
-   console.log(status);
+    
+    // function convertTimestampToHoursAndMinutes(timestamp) {
+    //   const hours = Math.floor(timestamp / 1000 / 60 / 60);
+    //   const minutes = Math.floor(timestamp / 1000 / 60) % 60;
+    //   return `${hours} hours and ${minutes} minutes`;
+    // }
+  
+    // const time = convertTimestampToHoursAndMinutes(1673003459000);
+    function findDateTime(timestamp)
+    {
+      const date = new Date(Date.parse(timestamp));
+      const month = date.toLocaleString('default', { month: 'long' });  // 0 for January, 1 for February, etc.
+      const day = date.getDate();
+      const year = date.getFullYear();
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      const seconds = date.getSeconds();
+  
+      
+      return  `${day} ${month} ${year} ${hours}:${minutes}:${seconds} `;
+    }
+    
+    console.log(findDateTime(orders.createdAt));
+    const statusdata =
+      [
+        {
+          "title": "Created",
+          "time": findDateTime(orders.createdAt),
+          "isComplete": true
+        },
+        {
+          "title": "Delivered",
+          "time": Date.parse(orders.createdAt) == Date.parse(orders.updatedAt) ? "" : findDateTime(orders.updatedAt),
+          "isComplete": Date.parse(orders.createdAt) == Date.parse(orders.updatedAt) ? "false" : true
+        }
+      ]
+
+    status.push({
+      status: statusdata,
+      success: true,
+      _id: orders._id,
+      product: orders.products,
+      amount: orders.amount,
+      address: orders.address,
+      orderid: orders.orderid,
+      otp: orders.otp,
+      userId: orders.userId,
+
+    });
+
+
+
+    //  console.log(status);
     const data = {
       success: true,
-      message:"OK",
-      data:  status,
-      
+      message: "OK",
+      data: status,
+
 
     }
-   // const orders = await Order.find({ userId: userData._id });
+    // const orders = await Order.find({ userId: userData._id });
     res.status(200).json(data);
   } catch (err) {
     res.status(500).json(err);
