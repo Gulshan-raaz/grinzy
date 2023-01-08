@@ -120,11 +120,21 @@ router.get("/find/:id", verifyToken, async (req, res) => {
     const orders = await Order.findById(req.params.id);
    // console.log(orders);
    let status = []
-   const statusdata = {
-    success: true,
-    created: orders.createdAt,
-    updated: Date.parse(orders.createdAt)==Date.parse(orders.updatedAt)?"":orders.updatedAt,
-  }
+   
+   const statusdata = 
+    [
+      {
+        "title": "Created",
+        "time": orders.createdAt,
+        "isComplete": true
+      },
+      {
+        "title": "Delivered",
+        "time": Date.parse(orders.createdAt)==Date.parse(orders.updatedAt)?"":orders.updatedAt,
+        "isComplete": Date.parse(orders.createdAt)==Date.parse(orders.updatedAt)?"false":true
+      }
+    ]
+  
    status.push({
     status: statusdata,
            success: true,
