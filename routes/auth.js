@@ -13,7 +13,7 @@ router.post("/register", async (req, res) => {
     business_Credit: req.body.business_Credit,
     business_Number: req.body.business_Number,
     business_Address: req.body.business_Address,
-    business_Credit: req.body.business_Credit,
+    business_category: req.body.business_category,
     business_image: req.body.business_image,
     business_aadhar: req.body.business_aadhar,
     emergency_contact: req.body.emergency_contact,

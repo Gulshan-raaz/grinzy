@@ -193,10 +193,20 @@ router.get("/find/:id", verifyToken, async (req, res) => {
 // //GET ALL
 
 router.get("/", verifyTokenAndAuthorization, async (req, res) => {
+  // try {
+  //   const orders = await Order.find();
+  //   res.status(200).json(orders);
+  // }
   try {
-    const orders = await Order.find();
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 1;
+    const query = Order.find().skip((page - 1) * limit).limit(limit).lean();
+    query.select('-__v');
+    const orders = await query.exec();
     res.status(200).json(orders);
-  } catch (err) {
+  }
+  
+  catch (err) {
     res.status(500).json(err);
   }
 });
