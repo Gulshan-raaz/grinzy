@@ -101,7 +101,7 @@ router.get("/find/", verifyToken, async (req, res) => {
     //  // console.log(productsdata)
     const data = {
       success: true,
-      message: "OK",
+      message: "OKk",
       data: orders,
 
 
@@ -119,19 +119,18 @@ router.get("/find/:id", verifyToken, async (req, res) => {
     console.log(req.params.id);
     const orders = await Order.findById(req.params.id);
     // console.log(orders);
-    let status = []
+
     //    const dateString = '2023-01-06T11:10:59.135Z';
-    
-    
+
+
     // function convertTimestampToHoursAndMinutes(timestamp) {
     //   const hours = Math.floor(timestamp / 1000 / 60 / 60);
     //   const minutes = Math.floor(timestamp / 1000 / 60) % 60;
     //   return `${hours} hours and ${minutes} minutes`;
     // }
-  
+
     // const time = convertTimestampToHoursAndMinutes(1673003459000);
-    function findDateTime(timestamp)
-    {
+    function findDateTime(timestamp) {
       const date = new Date(Date.parse(timestamp));
       const month = date.toLocaleString('default', { month: 'long' });  // 0 for January, 1 for February, etc.
       const day = date.getDate();
@@ -139,38 +138,17 @@ router.get("/find/:id", verifyToken, async (req, res) => {
       const hours = date.getHours();
       const minutes = date.getMinutes();
       const seconds = date.getSeconds();
-  
-      
-      return  `${day} ${month} ${year} ${hours}:${minutes}:${seconds} `;
+
+
+      return `${day} ${month} ${year} ${hours}:${minutes}:${seconds} `;
     }
+
+    console.log(typeof (orders));
     
-    console.log(findDateTime(orders.createdAt));
-    const statusdata =
-      [
-        {
-          "title": "Created",
-          "time": findDateTime(orders.createdAt),
-          "isComplete": true
-        },
-        {
-          "title": "Delivered",
-          "time": Date.parse(orders.createdAt) == Date.parse(orders.updatedAt) ? "" : findDateTime(orders.updatedAt),
-          "isComplete": Date.parse(orders.createdAt) == Date.parse(orders.updatedAt) ? "false" : true
-        }
-      ]
 
-    status.push({
-      status: statusdata,
-     
-      _id: orders._id,
-      product: orders.products,
-      amount: orders.amount,
-      address: orders.address,
-      orderid: orders.orderid,
-      otp: orders.otp,
-      userId: orders.userId,
 
-    });
+
+
 
 
 
@@ -178,10 +156,30 @@ router.get("/find/:id", verifyToken, async (req, res) => {
     const data = {
       success: true,
       message: "OK",
-      data: status,
+      data: {
+        ...orders._doc,
+        statusTimeline: [
+          {
+            title: "Created",
+            time: findDateTime(orders.createdAt),
+            isComplete: true
+          },
+          {
+            title: "Delivered",
+            time:
+              Date.parse(orders.createdAt) === Date.parse(orders.updatedAt)
+                ? ""
+                : findDateTime(orders.updatedAt),
+            isComplete:
+              Date.parse(orders.createdAt) === Date.parse(orders.updatedAt)
+                ? false
+                : true
+          }
+        ]
+      }
+    };
+    
 
-
-    }
     // const orders = await Order.find({ userId: userData._id });
     res.status(200).json(data);
   } catch (err) {
@@ -205,7 +203,7 @@ router.get("/", verifyTokenAndAuthorization, async (req, res) => {
     const orders = await query.exec();
     res.status(200).json(orders);
   }
-  
+
   catch (err) {
     res.status(500).json(err);
   }
