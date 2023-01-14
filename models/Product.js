@@ -11,6 +11,7 @@ const ProductSchema = new mongoose.Schema(
     mrp: { type: Number, required: true},
     percent: { type: Number, Default:0 },
     info: { type: String, },
+    
 
     minUnitName: { type: String },
     maxUnitName : { type: String},

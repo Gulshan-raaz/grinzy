@@ -70,7 +70,7 @@ router.get("/find/", verifyToken, async (req, res) => {
 
   try {
     const userData = await userDetails(req.headers);
-    const orders = await Order.find({ userId: userData._id });
+    const orders = await Order.find({ userId: userData._id }).sort({createdAt: -1});
     // let productsa=[]
     // const productsdata = orders.map(product => {
     //  product.products
