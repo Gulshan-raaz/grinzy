@@ -74,7 +74,7 @@ router.get("/", async (req, res) => {
     } else {
       category = await Category.find();
     }
-
+    console.log(category);
     res.status(200).json({"status":true,"message":"Category Loaded","data":category});
   } catch (err) {
     res.status(500).json(err);
