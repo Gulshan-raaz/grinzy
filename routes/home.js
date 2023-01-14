@@ -6,21 +6,48 @@ const router = require("express").Router();
 router.get("/", async (req, res) => {
 
   try {
-    let products;
+    const versionCode = req.headers['version_code'];
+    let product;
+    
 
 
-    products = await Product.find().limit(10);
-    const hproduct = {"type": "vertical",
+    product = await Product.find().limit(10);
+    const hproduct = {"type": "Horizontal",
     "title": "Daily Usage",
-    data: products}
-    const vproduct = {"type": "horizontal",
-    "title":"Most popular",
-    data: products}
+    data: product}
+    
     const banner = {"type": "banner",
     "title":"Sponser",
     data:{
       "image":"",
     }}
+
+    const version = {
+    
+      "versionCode":"7",
+      "status":versionCode==7 ? false : true,
+    }
+
+    const categories = await Product.distinct("categories").exec();
+    
+    
+    const randomCategories = categories.sort(() => Math.random() - 0.5).slice(0, 5);
+    
+    let products = [];
+    for (let category of randomCategories) {
+      console.log(category)
+        const randomProducts = await Product.aggregate([
+            { $match: { categories: category } },
+            { $sample: { size: 10} }
+        ]).exec();
+       
+        products = [...products, ...randomProducts];
+    }
+
+    console.log(products);
+    const vproduct = {"type": "vertical",
+    "title":"Most popular",
+    data: products}
     const data = {
       
       status: {
@@ -29,7 +56,7 @@ router.get("/", async (req, res) => {
       },
 
 
-      data: [vproduct,hproduct,banner]
+      data:[version,hproduct,vproduct,banner]
     }
        
        
