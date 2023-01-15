@@ -29,9 +29,11 @@ const OrderSchema = new mongoose.Schema(
     ],
     amount: { type: Number, required: true },
     address: { type: Object, required: true },
-    status: { type: String, default: "created" },
+    status: { type: String, default: "Confirmed" },
     otp: { type: Number, required: true},
     orderid: { type: String },
+    isPaid: { type: Boolean, default:false },
+    duesAmount: { type: Number,}
     
   },
   { timestamps: true }

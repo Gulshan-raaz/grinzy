@@ -131,11 +131,13 @@ router.get("/find/:id", verifyToken, async (req, res) => {
 
       return `${day} ${month} ${year} ${hours}:${minutes}:${seconds} `;
     }
+    console.log(orders)
     const data = {
       success: true,
       message: "OK",
       data: {
         ...orders._doc,
+
         statusTimeline: [
           {
             title: "Confirmed",
