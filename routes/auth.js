@@ -9,7 +9,7 @@ router.post("/register", async (req, res) => {
 
   const newUser = new User({
     business_Name: req.body.business_Name,
-    
+    business_Email: req.body.business_Email==""?"grinzy@gmail.com":req.body.business_Email,
     business_Credit: req.body.business_Credit,
     business_Number: req.body.business_Number,
     business_Address: req.body.business_Address,
@@ -23,6 +23,7 @@ router.post("/register", async (req, res) => {
       process.env.PASS_SEC
     ).toString(),
   });
+  
 
   try {
     const savedUser = await newUser.save();
