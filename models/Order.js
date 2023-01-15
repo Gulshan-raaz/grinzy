@@ -11,6 +11,10 @@ const OrderSchema = new mongoose.Schema(
         productName: {
           type: String,
         },
+        pNameHindi: {
+          type: String,
+        },
+
         productImage: {
           type: String,
         },
@@ -33,7 +37,9 @@ const OrderSchema = new mongoose.Schema(
     otp: { type: Number, required: true},
     orderid: { type: String },
     isPaid: { type: Boolean, default:false },
-    duesAmount: { type: Number,}
+    duesAmount: { type: Number,default:function(){
+      return this.amount;
+    } }
     
   },
   { timestamps: true }
