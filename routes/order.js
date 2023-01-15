@@ -115,21 +115,10 @@ router.get("/find/", verifyToken, async (req, res) => {
 router.get("/find/:id", verifyToken, async (req, res) => {
 
   try {
-    //const userData=await userDetails(req.headers);
+
     console.log(req.params.id);
     const orders = await Order.findById(req.params.id);
-    // console.log(orders);
-
-    //    const dateString = '2023-01-06T11:10:59.135Z';
-
-
-    // function convertTimestampToHoursAndMinutes(timestamp) {
-    //   const hours = Math.floor(timestamp / 1000 / 60 / 60);
-    //   const minutes = Math.floor(timestamp / 1000 / 60) % 60;
-    //   return `${hours} hours and ${minutes} minutes`;
-    // }
-
-    // const time = convertTimestampToHoursAndMinutes(1673003459000);
+   
     function findDateTime(timestamp) {
       const date = new Date(Date.parse(timestamp));
       const month = date.toLocaleString('default', { month: 'long' });  // 0 for January, 1 for February, etc.
@@ -142,17 +131,6 @@ router.get("/find/:id", verifyToken, async (req, res) => {
 
       return `${day} ${month} ${year} ${hours}:${minutes}:${seconds} `;
     }
-
-    console.log(typeof (orders));
-    
-
-
-
-
-
-
-
-    //  console.log(status);
     const data = {
       success: true,
       message: "OK",
@@ -160,7 +138,8 @@ router.get("/find/:id", verifyToken, async (req, res) => {
         ...orders._doc,
         statusTimeline: [
           {
-            title: "Created",
+            title: "Confirmed",
+            
             time: findDateTime(orders.createdAt),
             isComplete: true
           },

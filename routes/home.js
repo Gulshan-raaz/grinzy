@@ -25,7 +25,7 @@ router.get("/", async (req, res) => {
     const version = {
     
       "versionCode":"7",
-      "status":versionCode==7 ? false : true,
+      "status":versionCode <= 8 ? true : false,
     }
 
     const categories = await Product.distinct("categories").exec();
