@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
 
 
     product = await Product.find().limit(10);
-    const hproduct = {"type": "Horizontal",
+    const hproduct = {"type": "horizontal",
     "title": "Daily Usage",
     data: product}
     
