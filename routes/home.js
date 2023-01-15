@@ -14,10 +14,12 @@ router.get("/", async (req, res) => {
     product = await Product.find().limit(10);
     const hproduct = {"type": "horizontal",
     "title": "Daily Usage",
+    "subtitle":"Save Upto 60%",
     data: product}
     
     const banner = {"type": "banner",
     "title":"Sponser",
+    
     data:{
       "image":"",
     }}
@@ -47,6 +49,7 @@ router.get("/", async (req, res) => {
     console.log(products);
     const vproduct = {"type": "vertical",
     "title":"Most popular",
+    "subtitle":"Get the most popular product",
     data: products}
     const data = {
       
