@@ -176,7 +176,7 @@ router.get("/", verifyTokenAndAuthorization, async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 100;
-    const query = Order.find().populate('user').skip((page - 1) * limit).limit(limit).lean();
+    const query = Order.find().populate('userId').skip((page - 1) * limit).limit(limit).lean();
     query.select('-__v');
     const orders = await query.exec();
     
